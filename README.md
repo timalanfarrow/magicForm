@@ -1,7 +1,7 @@
-# magicForm
+# Magic Form
 Validate forms, and use custom animations for form events.
 
-Magic Form is dependent on jQuery.
+**Magic Form is dependent on jQuery.**
 
 # Formatting HTML for best results
 HTML inputs, textareas, and selects should be laid out in wrapper divs with the class, .input. This allows us to package labels and form elements together. Here's an example of a form:
@@ -29,11 +29,62 @@ HTML inputs, textareas, and selects should be laid out in wrapper divs with the 
 After initializing Magic Form, all of your textareas will resize automatically to fit content, and the class 'active' will be applied to any label for a textarea, or input that has content, or is currently focused.
 
 # Validating form Entries
-Once magicForm has been included into your project, you can call
 
-`magicForm.validate( $input, type );`
+`magicForm.validate( $input, type, fail, success );`
 
-Where $input is a jQuery form element to be validated, and type is "email", or "password". If the validation fails, a warning will be appended to the bottom of the relevant .input div in the form of a p tag with the class warning.
+| attribute | type | explanation |
+| ------------- |--------------| ----------------------------------|
+| $input        | jQuery element| The input element whose value should be validate |
+| type          | string        | "email", "password" |
+| fail          | function      | [OPTIONAL] function to be called if not valid |
+| Success       | function      | [OPTIONAL] function to be called if input is valid |
+
+## Email Validation
+Example email validation
+```
+const $emailInput = $("input.email");
+$emailInput.on("blur", ( e ) => {
+    const $thisInput = $( e.target );
+    magicForm.validate( $thisInput, "email" );
+});
+```
+By default, if the validation fails (input is not a valid email address) it will append a p tag with the class warning to the end of the containing div with the content, "Not a valid email!".
+
+This can be overwritten by specifying a fail function as the third parameter.
+
+By default the success function will remove the warning paragraph.
+
+## Password Validation
+Magic Form makes sure that passwords are at least six characters long. Magic Form can also be used to make sure that a confirm password and the initial password are the same. Link a confirm-password element to the initial password by specifying the data-confirm-password attribute. It should be the same as the id of your initial password input like so:
+
+```
+<form action='/' method='post'>
+    <div class='input'>
+        <p class='input-label'>Name</p>
+        <input type='text' />
+    </div>
+    <div class='input'>
+        <p class='input-label'>Password</p>
+        <input type='password' id='password' />
+    </div>
+    <div class='input'>
+        <p class='input-label'>Confirm Password</p>
+        <input class="confirm-password" type='password' data-confirm-password='password' />
+    </div>
+    <input type='submit' />
+</form>
+```
+
+Validate the confirm-password input with
+
+```
+    const $confirmPassword = $(".confirm-password");
+    $confirmPassword.on("blur", ( e ) => {
+        magicForm.validate( $( e.target ), "password" );
+    })
+```
+
+If this fails to match the two passwords together, a paragraph with the class warning and the content "Passwords do not match!" will be appended to the parent div of $(".confirm-password");
 
 # Dropdowns
 Dropdowns do *not* need to be wrapped in a div with the class input.
