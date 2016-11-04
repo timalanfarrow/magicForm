@@ -148,6 +148,7 @@ const magicForm = (function(){
 
         success( $input );
         break;
+
       case "password" :
         const length = value.length;
 
@@ -164,12 +165,44 @@ const magicForm = (function(){
             return;
           }
         }
-
         success( $input );
+        break;
 
+      case 'text':
+        var allowedCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,';
+        allowedCharacters = allowedCharacters.split('');
+
+        for ( i in value ) {
+          if( allowedCharacters.indexOf( value[i] ) == -1 ) {
+            return false;
+          } 
+          else {
+            return true;
+          }
+        }
         break;
+
       case "phone number" :
-        break;
+          let number = parseInt(value, 10)
+
+          let allNumbers = true 
+          for( i in number ) {
+            if ( typeof(number[i]) != number) {
+              console.log( number[i] + " " + "is" + " " + "Not a Number")
+              allNumbers = false;
+            }
+          }
+          if ( value.length != 10 ) {
+            return false;
+          } 
+          else if( !allNumbers ) {
+            return false;
+          } 
+          else {
+            return true;
+          }
+          break;
+
       default :
         return "unable to determine type";
         break;
