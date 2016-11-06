@@ -127,10 +127,12 @@ const magicForm = (function(){
       $containerDiv.children(".warning").remove();
 
       $containerDiv.append(`<p class='warning'>${ warning }</p>`);
+      return false;
     }, success = ( $failedInput ) => {
       const $warning = $failedInput.parent(".input").children(".warning");
 
       $warning.remove();
+      return true;
     }) {
     const value = $input.val();
 
@@ -141,18 +143,16 @@ const magicForm = (function(){
       case "email" :
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         
-        if( value === "" ){
-          const warning = "This is a required field."
-          fail( $input, warning );
-          return;
+        if( value == "" ){
+          const warning = "This is a required field.";
+          return fail( $input, warning );
         }
         else if ( !re.test( value ) ) {
           const warning = "Email is not valid!";
-          fail( $input, warning );
-          return;
+          return fail( $input, warning );
         }
 
-        success( $input );
+        return success( $input );
         break;
 
       case "password" :
@@ -176,12 +176,12 @@ const magicForm = (function(){
 
       case 'text':
 
-        const textRegEx = /^[0-9a-zA-Z.,!]+$/;  
+        const textRegEx = /^[0-9a-zA-Z.,! ]+$/;  
 
           if( value.match( textRegEx )){ 
             return success( $input );
           } 
-          else if( value === "" || value === " " ){
+          else if( value === "" ){
             return fail( $input, "This is a required field.");
           }
           else {
