@@ -3,8 +3,6 @@ Validate forms, and use custom animations for form events.
 
 **Magic Form is dependent on jQuery.**
 
-Rome wasn't built in a day. **Magic Form was.**
-
 # Contributing
 1. Fork this repository
 2. Update it to add functions, or fix functions using the [AirBnB style guide](https://github.com/airbnb/javascript)
