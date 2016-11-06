@@ -50,6 +50,8 @@ const magicForm = (function(){
       $label.toggleClass("active");
     });
 
+    $formInput.off('focus blur'); // if a user calls magicFrom.init() twice, this will fire two times, opening and minimizing the input on focus
+
     $formInput.on("focus blur", ( e ) => {
       const $input = $( e.target );
       const $label = $input.prev(".input-label");
