@@ -169,17 +169,18 @@ const magicForm = (function(){
         break;
 
       case 'text':
-        var allowedCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,';
-        allowedCharacters = allowedCharacters.split('');
 
-        for ( i in value ) {
-          if( allowedCharacters.indexOf( value[i] ) == -1 ) {
-            return false;
+        const textRegEx = /^[0-9a-zA-Z.,!]+$/;  
+
+          if( value.match( textRegEx )){ 
+            return success( $input );
           } 
-          else {
-            return true;
+          else if( value === "" || value === " " ){
+            return fail( $input, "This is a required field.");
           }
-        }
+          else {
+            return fail( $input, "invalid characters used, please try again" );
+          }
         break;
 
       case "phone number" :
