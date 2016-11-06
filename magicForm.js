@@ -127,10 +127,12 @@ const magicForm = (function(){
       $containerDiv.children(".warning").remove();
 
       $containerDiv.append(`<p class='warning'>${ warning }</p>`);
+      return false;
     }, success = ( $failedInput ) => {
       const $warning = $failedInput.parent(".input").children(".warning");
 
       $warning.remove();
+      return true;
     }) {
     const value = $input.val();
 
