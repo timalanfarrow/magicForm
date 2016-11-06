@@ -140,7 +140,13 @@ const magicForm = (function(){
     switch( type ) {
       case "email" :
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if ( !re.test( value ) ) {
+        
+        if( value === "" ){
+          const warning = "This is a required field."
+          fail( $input, warning );
+          return;
+        }
+        else if ( !re.test( value ) ) {
           const warning = "Email is not valid!";
           fail( $input, warning );
           return;
