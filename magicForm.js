@@ -172,14 +172,15 @@ const magicForm = (function(){
     }) {
     const value = $input.val();
 
-    if ( value == undefined )
+    if ( value == undefined ){
       console.error("Failed to find value for element:", $failedInput );
+    }
 
     switch( type ) {
       case "email" :
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         
-        if( value == "" ){
+        if( value === "" ){
           const warning = "This is a required field.";
           return fail( $input, warning );
         }
@@ -211,8 +212,8 @@ const magicForm = (function(){
         break;
 
       case 'text':
-
-        const textRegEx = /^[0-9a-zA-Z.,! ]+$/;  
+      
+        const textRegEx = /^[0-9a-zA-Z.,;! \')]+$/;  
 
           if( value.match( textRegEx )){ 
             return success( $input );
@@ -254,22 +255,29 @@ const magicForm = (function(){
 
   /*
    * Create a custom submit for $form.
+   * in ${`nameOfThePage`}.js you must attach an event listener to the form submit button.
    */
+
   const ajaxSubmit = function submitFormWithAjax( $form ) {
-    $form.submit(( e ) => {
-      e.preventDefault();
 
-      const $thisForm = $( e.target );
-      const data = $thisForm.serializeArray();
-      const url  = $thisForm.attr("action");
+      const $theForm  = $form;
+      const url       = $theForm.attr("action");
+      const data      = $theForm.serializeArray();
 
-      console.log( data );
       $.ajax({
         type: "POST",
         url : url,
         data: data,
-      });
-    })
+        success: function( data ){
+          console.log( data );
+          return true;
+        },
+        fail: function( err ){
+          console.log( err );
+          return false;
+        }
+      })
+
   }
 
   return {
