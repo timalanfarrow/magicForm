@@ -178,7 +178,7 @@ const magicForm = (function(){
         break;
 
       case 'text':
-
+      
         const textRegEx = /^[0-9a-zA-Z.,;! \')]+$/;  
 
           if( value.match( textRegEx )){ 
