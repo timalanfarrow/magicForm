@@ -281,9 +281,10 @@ const magicForm = (function(){
   }
 
   return {
-    init: init,
-    dateDropDowns: dateDropDowns,
-    validate: validate,
-    ajaxSubmit: ajaxSubmit,
+    init          : init,
+    dateDropDowns : dateDropDowns,
+    dropDowns     : dropDowns,
+    validate      : validate,
+    ajaxSubmit    : ajaxSubmit,
   }
 }());
