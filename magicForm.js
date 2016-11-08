@@ -50,6 +50,8 @@ const magicForm = (function(){
       $label.toggleClass("active");
     });
 
+    $formInput.off('focus blur'); // if a user calls magicFrom.init() twice, this will fire two times, opening and minimizing the input on focus
+
     $formInput.on("focus blur", ( e ) => {
       const $input = $( e.target );
       const $label = $input.prev(".input-label");
@@ -127,32 +129,33 @@ const magicForm = (function(){
       $containerDiv.children(".warning").remove();
 
       $containerDiv.append(`<p class='warning'>${ warning }</p>`);
+      return false;
     }, success = ( $failedInput ) => {
       const $warning = $failedInput.parent(".input").children(".warning");
 
       $warning.remove();
+      return true;
     }) {
     const value = $input.val();
 
-    if ( value == undefined )
+    if ( value == undefined ){
       console.error("Failed to find value for element:", $failedInput );
+    }
 
     switch( type ) {
       case "email" :
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         
         if( value === "" ){
-          const warning = "This is a required field."
-          fail( $input, warning );
-          return;
+          const warning = "This is a required field.";
+          return fail( $input, warning );
         }
         else if ( !re.test( value ) ) {
           const warning = "Email is not valid!";
-          fail( $input, warning );
-          return;
+          return fail( $input, warning );
         }
 
-        success( $input );
+        return success( $input );
         break;
 
       case "password" :
@@ -176,12 +179,12 @@ const magicForm = (function(){
 
       case 'text':
 
-        const textRegEx = /^[0-9a-zA-Z.,!]+$/;  
+        const textRegEx = /^[0-9a-zA-Z.,;! \')]+$/;  
 
           if( value.match( textRegEx )){ 
             return success( $input );
           } 
-          else if( value === "" || value === " " ){
+          else if( value === "" ){
             return fail( $input, "This is a required field.");
           }
           else {
@@ -218,22 +221,29 @@ const magicForm = (function(){
 
   /*
    * Create a custom submit for $form.
+   * in ${`nameOfThePage`}.js you must attach an event listener to the form submit button.
    */
+
   const ajaxSubmit = function submitFormWithAjax( $form ) {
-    $form.submit(( e ) => {
-      e.preventDefault();
 
-      const $thisForm = $( e.target );
-      const data = $thisForm.serializeArray();
-      const url  = $thisForm.attr("action");
+      const $theForm  = $form;
+      const url       = $theForm.attr("action");
+      const data      = $theForm.serializeArray();
 
-      console.log( data );
       $.ajax({
         type: "POST",
         url : url,
         data: data,
-      });
-    })
+        success: function( data ){
+          console.log( data );
+          return true;
+        },
+        fail: function( err ){
+          console.log( err );
+          return false;
+        }
+      })
+
   }
 
   return {
