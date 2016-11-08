@@ -118,6 +118,40 @@ const magicForm = (function(){
   }
 
   /*
+   * automates special dropdowns
+   * - auto populates states
+   */
+  const dropDowns = function genericDataDropDownInit() {
+    const $dropdowns = $("select");
+
+    $dropdowns.each(function( i ) {
+      let $dropdown = $( $dropdowns[i] );
+
+      let options = $dropdown[0].dataset.options;
+      let apply   = true;
+      
+      switch( options ) {
+        case "states" :
+          options = [
+            "State", "AL","AK","AS","AR","AZ","CA","CO","CT","DE","DC","FL","GA","GU","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MH","MA","MI","FM","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","MP","OH","OK","OR","PW","PA","PR","RI","SC","SD","TN","TX","UT","VT","VA","VI","WV","WA","WY","WI"
+          ]
+          break;
+        default :
+          console.warn("No function associated with data-options type: " + options + " on element", $dropdown);
+          apply = false;
+          break;
+      }
+
+      if ( apply ) {
+        for ( i in options ) {
+          let option = options[i];
+          $dropdown.append("<option value='" + option + "'>" + option + "</option>");
+        }
+      }
+    })
+  }
+
+  /*
    * validates form input.
    * $input - jQuery element - input to be validated
    * type   - string - _email, phone number, password_ - type of input
